@@ -2,18 +2,44 @@
 <html>
 
 <head>
+<script src="socket.io/socket.io.js"></script>
+
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
 <script>
+/* 
+var socket = io.connect('https://192.168.1.11');
+    // on every message recived we print the new datas inside the #container div
+    socket.on('notification', function () {
+        if ($('#myonoffswitch').is(':checked')) {
+                $('#myonoffswitch').attr('checked',false);
+            } else {
+                $('#myonoffswitch').attr('checked',true);
+            }
+});
+*/
+
+io = io.connect();
+io.emit('ready');
+io.on('notification', function (data) {
+       if (data == true){
+        $('#myonoffswitch').prop('checked',true);
+        console.log('switch was turned on');
+       } else {
+        $('#myonoffswitch').prop('checked',false);
+        console.log('switch was turned off');
+       }
+});
+
 $(document).ready(function (e) {
 		console.log("document loaded");
 		$.get("/switch", function(data){
 			console.log("get /switch returned");
 			console.log(data);
 			if (data == "on"){
-				$('#myonoffswitch').attr('checked',true);
+				$('#myonoffswitch').prop('checked',true);
 			} else {
-				$('#myonoffswitch').attr('checked',false);
+				$('#myonoffswitch').prop('checked',false);
 			}
 		});
 		$("input#myonoffswitch").click(function (e) {
